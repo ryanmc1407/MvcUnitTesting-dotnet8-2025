@@ -9,7 +9,7 @@ namespace MvcUnitTesting_dotnet8
         public static void Main(string[] args)
         {
 
-            ActivityAPIClient.Track(StudentID: "S00236888", StudentName: "Ryan McClelland", activityName: "Rad302 2026 Week 2 Lab 1", Task: "Running Week 2 App");
+            ActivityAPIClient.Track(StudentID: "S00236888", StudentName: "Ryan McClelland", activityName: "Rad302 2026 Week 2 Lab 1", Task: "Implementing Production Repository Pattern");
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +17,10 @@ namespace MvcUnitTesting_dotnet8
             builder.Services.AddControllersWithViews();
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<BookDbContext>(options =>
-                options.UseSqlServer(connectionString));
-            // Register the repository as a service
-            builder.Services.AddScoped<IRepository<Book>, WorkingBookRepository<Book>>();
+             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddTransient<IRepository<Book>, WorkingBookRepository<Book>>();
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
