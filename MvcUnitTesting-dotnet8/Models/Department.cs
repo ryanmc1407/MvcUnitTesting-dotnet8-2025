@@ -8,9 +8,10 @@ namespace DataLayer
     [Table("Departments")]
     public class Department
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
         public string? Name { get; set; }
 
-        public virtual ICollection<Employee>? DepartmentEmployees { get; set; }
+        public virtual ICollection<Employee>? Employees { get; set; }
     }
 }

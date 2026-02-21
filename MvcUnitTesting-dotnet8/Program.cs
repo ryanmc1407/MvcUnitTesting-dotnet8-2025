@@ -1,3 +1,4 @@
+using DataLayer;
 using Microsoft.EntityFrameworkCore;
 using MvcUnitTesting_dotnet8.Models;
 using Tracker.WebAPIClient;
@@ -18,8 +19,9 @@ namespace MvcUnitTesting_dotnet8
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<BookDbContext>(options =>
              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+            
             builder.Services.AddTransient<IRepository<Book>, WorkingBookRepository<Book>>();
+            builder.Services.AddTransient<IRepository <Department>, WorkingDepartmentRepository>();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -31,6 +33,14 @@ namespace MvcUnitTesting_dotnet8
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<BookDbContext>();
+                BookDbContext.SeedFromCsv(context); // Calls the logic 
+            }
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

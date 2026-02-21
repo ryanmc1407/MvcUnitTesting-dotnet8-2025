@@ -16,10 +16,41 @@ namespace MvcUnitTesting_dotnet8.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.12")
+                .HasAnnotation("ProductVersion", "8.0.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DataLayer.Department", b =>
+                {
+                    b.Property<int>("ID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("DataLayer.Employee", b =>
+                {
+                    b.Property<int>("ID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DepartmentID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DepartmentID");
+
+                    b.ToTable("Employees");
+                });
 
             modelBuilder.Entity("MvcUnitTesting_dotnet8.Models.Book", b =>
                 {
@@ -73,6 +104,22 @@ namespace MvcUnitTesting_dotnet8.Migrations
                             Name = "The Battle of the Somme",
                             Price = 22.00m
                         });
+                });
+
+            modelBuilder.Entity("DataLayer.Employee", b =>
+                {
+                    b.HasOne("DataLayer.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("DataLayer.Department", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MvcUnitTesting_dotnet8.Models;
 using System.Diagnostics;
 using Tracker.WebAPIClient;
+using DataLayer;
 
 namespace MvcUnitTesting_dotnet8.Controllers
 {

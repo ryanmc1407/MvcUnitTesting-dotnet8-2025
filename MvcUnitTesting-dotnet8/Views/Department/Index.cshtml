@@ -1,0 +1,19 @@
+﻿<form method="get" asp-action="Index">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <select name="deptName" onchange="this.form.submit()">
+                <option value=""> Select Department </option>
+                <option value="Accounts" selected="@(ViewBag.SelectedDept == "Accounts")">Accounts</option>
+                <option value="Sales" selected="@(ViewBag.SelectedDept == "Sales")">Sales</option>
+                <option value="HR" selected="@(ViewBag.SelectedDept == "HR")">HR</option>
+                <option value="WAREHOUSE" selected="@(ViewBag.SelectedDept == "WAREHOUSE")">Warehouse</option>
+            </select>
+        </div>
+    </div>
+</form>
+<table>
+    @foreach (var emp in Model)
+    {
+        <tr><td>@emp.Name</td></tr>
+    }
+</table>

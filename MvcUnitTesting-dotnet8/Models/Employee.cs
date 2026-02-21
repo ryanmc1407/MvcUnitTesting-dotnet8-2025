@@ -8,10 +8,13 @@ namespace DataLayer
     [Table("Employees")]
     public class Employee
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
-        public int DepartmentId { get; set; }
-        public string? name { get; set; }
+        public int DepartmentID { get; set; }
+        
+        public string? Name { get; set; }
 
+        public virtual Department Department { get; set; }
     }
 }

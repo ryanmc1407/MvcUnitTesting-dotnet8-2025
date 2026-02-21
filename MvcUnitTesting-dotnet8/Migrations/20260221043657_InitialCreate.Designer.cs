@@ -11,18 +11,49 @@ using MvcUnitTesting_dotnet8.Models;
 namespace MvcUnitTesting_dotnet8.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20250122164343_initial-books")]
-    partial class initialbooks
+    [Migration("20260221043657_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.12")
+                .HasAnnotation("ProductVersion", "8.0.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DataLayer.Department", b =>
+                {
+                    b.Property<int>("ID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("DataLayer.Employee", b =>
+                {
+                    b.Property<int>("ID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DepartmentID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DepartmentID");
+
+                    b.ToTable("Employees");
+                });
 
             modelBuilder.Entity("MvcUnitTesting_dotnet8.Models.Book", b =>
                 {
@@ -60,7 +91,7 @@ namespace MvcUnitTesting_dotnet8.Migrations
                             ID = 2,
                             Genre = "Fiction",
                             Name = "War and Peace",
-                            Price = 17m
+                            Price = 17.00m
                         },
                         new
                         {
@@ -74,8 +105,24 @@ namespace MvcUnitTesting_dotnet8.Migrations
                             ID = 4,
                             Genre = "History",
                             Name = "The Battle of the Somme",
-                            Price = 22m
+                            Price = 22.00m
                         });
+                });
+
+            modelBuilder.Entity("DataLayer.Employee", b =>
+                {
+                    b.HasOne("DataLayer.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("DataLayer.Department", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

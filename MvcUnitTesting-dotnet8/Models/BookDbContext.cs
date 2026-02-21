@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CsvHelper;
+using DataLayer;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace MvcUnitTesting_dotnet8.Models
 {
@@ -22,5 +25,38 @@ namespace MvcUnitTesting_dotnet8.Models
         }
 
         public DbSet<Book> Books { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+
+
+        public static void SeedFromCsv(BookDbContext context)
+        {
+            context.Database.EnsureCreated();
+
+            if (context.Departments.Any()) return;
+
+            // 1. Seed Departments
+            using (var reader = new StreamReader("Data/Departments.csv"))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<Department>().ToList();
+                context.Departments.AddRange(records);
+                // SAVE NOW so IDs exist for the next step
+                context.SaveChanges();
+            }
+
+            // 2. Seed Employees
+            using (var reader = new StreamReader("Data/Employee.csv"))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+               
+                var records = csv.GetRecords<Employee>()
+                                 .Select(e => { e.Department = null; return e; })
+                                 .ToList();
+
+                context.Employees.AddRange(records);
+                context.SaveChanges();
+            }
+        }
     }
 }
