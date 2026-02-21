@@ -25,7 +25,7 @@ namespace MvcUnitTesting.Tests.Controllers
 
             //Act
             HomeController controller = new HomeController(bookRepository,null);
-            ViewResult viewResult = controller.Index() as ViewResult;
+            ViewResult viewResult = controller.Index("Fiction") as ViewResult;
             var model = viewResult.Model as IEnumerable<Book>;
 
             //Assert
