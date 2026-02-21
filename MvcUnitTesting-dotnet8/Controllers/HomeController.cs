@@ -26,7 +26,14 @@ namespace MvcUnitTesting_dotnet8.Controllers
            
             ViewData["Genre"] = genre;
 
+            // View all books
             var books = repository.GetAll();
+
+            // Filter if a genre is specified 
+            if (!string.IsNullOrEmpty(genre))
+            {
+                books = books.Where(b => b.Genre == genre).ToList();   
+            }
             return View(books);
         }
 
